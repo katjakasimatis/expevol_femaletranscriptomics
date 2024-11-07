@@ -487,7 +487,26 @@ legend("topright", pch = "", c("Male DE", round(z$adj.r.squared, digits = 2), z$
 
 dev.copy2pdf(file="~/Desktop/2024.05.20_SexBias.pdf", useDingbats=FALSE, family="sans", width = 6, height = 4)
 
+#Is the proportion of female-biased male DEs significantly different from the proportion of female-biased genes overall?
+x <- c(length(subset(new.all, sexbias > 1 & pvalueM.y < bonf2)$WBGeneID),
+       length(subset(new.all, sexbias > 1)$WBGeneID))
+y <- c(length(subset(new.all, pvalueM.y < bonf2)$WBGeneID),
+       length(subset(new.all, sexbias > 1 | sexbias <= 1)$WBGeneID))
+prop.test(x, y, alternative = "two.sided")
 
+#Is the proportion of X-linked female DEs significantly different from the overall proportion of X-linked genes?
+a <- c(length(subset(new.all, pvalueF < bonf & chromosome == "X")$WBGeneID),
+       length(subset(new.all, chromosome == "X")$WBGeneID))
+b <- c(length(subset(new.all, pvalueF < bonf)$WBGeneID),
+       length(subset(new.all, sexbias > 1 | sexbias <= 1)$WBGeneID))
+prop.test(a, b, alternative = "two.sided")
+
+#Is the proportion of X-linked female-biased female DEs significantly different from the overall proportion of X-linked female-biased genes?
+c <- c(length(subset(new.all, pvalueF < bonf & chromosome == "X" & sexbias > 1)$WBGeneID),
+       length(subset(new.all, chromosome == "X" & sexbias > 1)$WBGeneID))
+d <- c(length(subset(new.all, pvalueF < bonf & chromosome == "X")$WBGeneID),
+       length(subset(new.all, chromosome == "X")$WBGeneID))
+prop.test(c, d, alternative = "two.sided")
 
 
 
